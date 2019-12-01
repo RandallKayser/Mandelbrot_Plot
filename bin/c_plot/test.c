@@ -9,7 +9,9 @@ int main(int argc, char *argv[]) {
    }
 
    plot_params *the_params = malloc(sizeof(plot_params));
-   int linenum = (int) *argv[1];
+   char **ptr;
+   int linenum = strtol(argv[1], ptr, 10);
+   printf("linenum is %d\n", linenum);   
    char *filepath = argv[2];
    read_params(filepath, linenum, the_params);
    print_params(the_params);
