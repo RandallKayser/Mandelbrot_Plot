@@ -1,0 +1,17 @@
+/// param guide ///
+
+llx, lly, urx, ury, maxiter, dereps, pw, ph, colormode, lpcw 
+
+///
+
+llx, lly, urx, ury = (double) coords of bounding box on lower left, upper right
+
+maxiter = (int) precision of Mset
+
+pw, ph = (int pixel dimensions)
+
+colormode = (string) color mode
+
+lpcw = (double) log potential color width tunes width of colorbands
+
+dereps = derivative epsilon - parameter controls tolerance in interior detection method

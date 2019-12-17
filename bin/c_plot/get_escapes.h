@@ -4,8 +4,22 @@
 #include "./get_params.h"
 #endif
 
+struct pix_data {
+   //pixel coords
+   int i;
+   int j;
+   // z coords
+   double cx;
+   double cy;
+   // escape iteration and modulus
+   int n_esc;
+   double escmod;
+   double logv;
+};
 
-void get_z(int i, int j, double *coords, plot_params *the_params);
-int iterate_pix(int i, int j, plot_params *the_params);
-int *get_escapes(plot_params *the_params);
+typedef struct pix_data pix;
+
+void get_z(pix *p, plot_params *the_params);
+void iterate_pix(pix *p, plot_params *the_params);
+void *get_escapes(pix *pixarray, plot_params *the_params);
 

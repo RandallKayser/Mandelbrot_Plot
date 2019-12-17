@@ -9,10 +9,19 @@ struct param_struct {
    double urx;
    double ury;
    int maxiter;
-   
+   double dereps;   
    int pw;
    int ph;
    char colormode[20];
+   double rmag;
+   double gmag;
+   double bmag;
+   double rscale;
+   double gscale;
+   double bscale;
+   double rshift;
+   double gshift;
+   double bshift;
 };
 typedef struct param_struct plot_params;
 
