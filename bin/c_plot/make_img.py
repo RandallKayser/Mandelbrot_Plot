@@ -4,7 +4,7 @@ import numpy as np
 import sys
 
 if(len(sys.argv)!=3):
-   print("usage: python make_img.py, runnum, plotfolder\n")
+   print("usage: python make_img.py, plotfolder, runnum\n")
 
 filestring = "../../dat/" + sys.argv[1] + "/" + sys.argv[2] + ".dat"
 def strtotriple(s):

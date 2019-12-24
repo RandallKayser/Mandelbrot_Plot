@@ -23,7 +23,10 @@ void get_z(pix *p, plot_params *the_params) {
 void iterate_pix(pix *p, plot_params *the_params) {
    //use z = x+iy to avoid calling get_z too often
    //return 1 if in set, 0 if not (bw implementation)
-   
+   double dx = 1.0;
+   double derepsmod = the_params->dereps*the_params->dereps;
+   double dy = 0.0;
+   double dmod = 1.0;
    int maxiter = the_params->maxiter;
    double cx = p->cx;
    double cy = p->cy;
@@ -37,22 +40,29 @@ void iterate_pix(pix *p, plot_params *the_params) {
    p->escmod = -1.0;
    p->logv = NAN;
    for(int iter=1; iter<maxiter; iter++) {
-      if(mod < 1e6) {
+      //rewrite  this logic block
+      if(mod > 1e6) {
+         p->n_esc = iter;
+         p->escmod = mod;
+         p->logv = log(log(mod)) - iter * log(2);
+         break;
+      } else if(dmod < derepsmod) {
+         break;
+      } else {
+         tmp = 2.0*(dx*x - dy*y);
+         dy = 2.0*(x*dy + dx*y);
+         dx = tmp;
          tmp = x*x - y*y + cx;
          y = 2.0*x*y + cy;
          x = tmp;
          mod = x*x + y*y;
-      } else {
-      p->n_esc = iter;
-      p->escmod = mod;
-      p->logv = log(log(mod)) - iter * log(2);
-      break;
+         dmod = dx*dx + dy*dy;
       }
    }
 }
 
 
-void *get_escapes(pix *pixarray, plot_params *the_params) {
+void get_escapes(pix *pixarray, plot_params *the_params) {
    
    int pixh = the_params->ph;
    int pixw = the_params->pw;

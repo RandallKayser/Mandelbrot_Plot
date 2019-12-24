@@ -31,12 +31,12 @@ void normalizelogv( double *minandmax, pix *pixarray, plot_params *the_params) {
    }
    double logvmean = logvsum/(the_params->pw*the_params->ph);
 
-   for(int i=0; i<the_params->pw; i++) {
+/*   for(int i=0; i<the_params->pw; i++) {
       for(int j=0; j<the_params->ph; j++) {
          pixarray[i+j*the_params->pw].logv -= logvmean;
       }
    }
-
+*/
    minandmax[0] = logvmin;
    minandmax[1] = logvmax;
    printf("min, max, sum, mean are: %lf %lf %lf %lf\n", minandmax[0], minandmax[1], logvsum, logvmean);
@@ -60,9 +60,9 @@ void get_color(int *out, pix *p, pix *pixarray, plot_params *the_params) {
       out[2] = 0;
    } else {
       double logv = log(log(p->escmod)) - p->n_esc * log(2.0);
-      out[0] = (int) rmag/2*(1 - tanh(rscale*logv+rshift));
-      out[1] = (int) gmag/2*(1 - tanh(gscale*logv+gshift));
-      out[2] = (int) bmag/2*(1 - tanh(bscale*logv+bshift));
+      out[0] = (int) rmag/2*(1 - tanh(rscale*(logv+rshift)));
+      out[1] = (int) gmag/2*(1 - tanh(gscale*(logv+gshift)));
+      out[2] = (int) bmag/2*(1 - tanh(bscale*(logv+bshift)));
    }
 }
 
@@ -70,28 +70,44 @@ void write_data(plot_params *the_params, pix *returnarray) {
    
    char outfile[128] = "";
    char tmp[64] = "";
+   char logvoutfile[128] = "";
+
    strcpy(outfile, the_params->plotdir);
    sprintf(tmp, "%d.dat", the_params->linenum);
    strcat(outfile, tmp);
    printf("the filepath is %s\n", outfile);
+   
+   strcpy(logvoutfile, the_params->plotdir);
+   sprintf(tmp, "%d.logv", the_params->linenum);
+   strcat(logvoutfile, tmp);
+
+   FILE *logvfp = fopen(logvoutfile, "w");
    FILE *fp = fopen(outfile, "w");
    int pixw = the_params->pw;
    int pixh = the_params->ph;
    int color[3] = {0};
-
+   double thislogv = 0.0;
    double minmax[2] = {0,0};
    fprintf(fp, "colormode = %s, pixh = %d, pixw = %d\n", the_params->colormode, pixw, pixh);
    normalizelogv(minmax, returnarray, the_params);
    for(int j=0; j<pixh; j++) {
       get_color(color, &(returnarray[j*pixw]), returnarray, the_params);
       fprintf(fp, "(%d %d %d)", color[0], color[1], color[2]);
-      
+      thislogv = returnarray[j*pixw].logv;
+      if(!isnan(thislogv)) {
+         fprintf(logvfp, "%lf", thislogv);
+      }
       for(int i=1; i<pixw; i++) {     
          get_color(color, &(returnarray[i+j*pixw]), returnarray, the_params);
          fprintf(fp, ", (%d %d %d)", color[0], color[1], color[2]);
+
+         thislogv = returnarray[i+j*pixw].logv;
+         if(!isnan(thislogv)) {
+            fprintf(logvfp, ", %lf", thislogv);
+         }
       }
       fprintf(fp, "\n");
-   
+      fprintf(logvfp, "\n");
    }
    fclose(fp);
 }
