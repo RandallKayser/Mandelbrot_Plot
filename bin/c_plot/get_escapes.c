@@ -2,9 +2,37 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
-#include "./get_params.h"
-#include "./get_escapes.h"
+#include <time.h>
+#ifndef WRITE_DATA_HEADER
+#include "./write_data.h"
+#endif
 
+#ifndef GET_PARAMS_HEADER
+#include "./get_params.h"
+#endif
+
+/* void simple_plot(plot_params *theparams, run_params *therunparams) {
+   char pathtodat[128] = "../../dat/";
+   plot_params *the_params = malloc(sizeof(plot_params));
+   
+   strcat(pathtodat, rundir);
+   strcat(pathtodat, "/");
+   strcpy(the_params->plotdir, pathtodat);
+   
+   fread_params(the_params);
+   print_params(the_params);
+
+   int pw = the_params->pw;
+   int ph = the_params->ph;
+   pix *returnarray = malloc(sizeof(pix)*pw*ph);
+   
+   get_escapes(returnarray, the_params);
+   
+   write_data(the_params, returnarray);
+  
+   free(returnarray);
+}
+*/
 void get_z(pix *p, plot_params *the_params) {
    
    double llx = the_params->llx;
