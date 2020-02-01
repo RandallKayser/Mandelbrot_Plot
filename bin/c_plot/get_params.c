@@ -5,7 +5,9 @@
 #ifndef GET_STRUCTS
 #include "structs.h"
 #endif
-
+#ifndef GET_PARAMS_HEADER
+#include "get_params.h"
+#endif
 
 plot_params *init_plot_params(char *plotdir, char *outname, int linenum,
       double llx, double lly, double urx,
@@ -50,7 +52,7 @@ void make_line_list(int *linelist, int argctot, char *args[]) {
    int offset = 1;
    int low = 0;
    int high = 0;
-   for(int i=2; i<argctot; i++) {
+   for(int i=3; i<argctot; i++) {
       strcpy(scratch, args[i]);
       scratchptr[0] = strtok(scratch, "-");
       scratchptr[1] = strtok(NULL, "-");
@@ -68,7 +70,6 @@ void make_line_list(int *linelist, int argctot, char *args[]) {
       }
    }
    linelist[0] = offset;
-   printf("%ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld, %ld\n", linelist[0], linelist[1], linelist[2], linelist[3], linelist[4], linelist[5], linelist[6], linelist[7], linelist[8], linelist[offset-1]); 
 }
 
 void fread_params(int *lines, plot_params **paramsout) {
@@ -124,35 +125,45 @@ void fread_params(int *lines, plot_params **paramsout) {
       }
 
       //now we want this line, scanf and set params
-      printf("about to scanf\n");
       fscanf(paramsfile, "%[^,], %lf, %lf, %lf, %lf, %d, %lf, %d, %d, %[^,], %d, %d, %d, %lf, %lf, %lf, %lf, %lf, %lf\n",
             aoutname, &allx, &ally, &aurx, &aury, &amaxiter, &adereps, &apw, &aph,
             acolormode, &armag, &agmag, &abmag, &arscale, &agscale, &abscale,
             &arshift, &agshift, &abshift);        
-      printf("about to assign paramsout[%d]\n", offset); 
       paramsout[offset] = init_plot_params(paramsout[0]->plotdir, aoutname, 
             fline, allx, ally,  aurx, aury,
             amaxiter, adereps, apw, aph, acolormode,
             armag, agmag, abmag,
             arscale, agscale, abscale, 
             arshift, agshift, abshift);
-      printf("paramsout assigned\n");
       offset++;
       fline++;
-      printf("lines[0]-offset = %d\n", lines[0]-offset);   
    }
 
    fclose(paramsfile);   
 }
 
 void print_params(plot_params *thisparams) {
-   printf("These plotparams are:\n\nplotdir=%s\noutname=%s\nlinenum=%d\nllx=%lf\nlly=%lf\nurx=%lf\nury=%lf\nmaxiter=%d\ndereps=%lf\npw=%d\nph=%d\ncolormode=%s\nrmag=%lf\ngmag=%lf\nbmag=%lf\nrscale=%lf\nbscale=%lf\ngscale=%lf\nrshift=%lf\nrshift=%lf\nbshift=%lf \n\n", 
-            thisparams->plotdir, thisparams->outname, thisparams->linenum,
-            thisparams->llx, thisparams->lly, thisparams->urx, thisparams->ury,
-            thisparams->maxiter, thisparams->dereps, thisparams->pw, thisparams->ph, thisparams->colormode,
-            thisparams->rmag, thisparams->gmag, thisparams->bmag,
-            thisparams->rscale, thisparams->gscale, thisparams->bscale,
-            thisparams->rshift, thisparams->gshift, thisparams->bshift);
+   printf("These plotparams are:\n\nplotdir=%s\n", thisparams->plotdir);
+	printf("outname=%s\n", thisparams->outname);
+	printf("linenum=%d\n", thisparams->linenum);
+	printf("llx=%lf\n", thisparams->llx);
+	printf("lly=%lf\n", thisparams->lly);
+	printf("urx=%lf\n", thisparams->urx);
+	printf("ury=%lf\n", thisparams->ury);
+	printf("maxiter=%d\n", thisparams->maxiter);
+	printf("dereps=%lf\n", thisparams->dereps);
+	printf("pw=%d\n", thisparams->pw);
+	printf("ph=%d\n", thisparams->ph);
+	printf("colormode=%s\n", thisparams->colormode);
+	printf("rmag=%lf\n", thisparams->rmag);
+	printf("gmag=%lf\n", thisparams->gmag);
+	printf("bmag=%lf\n", thisparams->bmag);
+	printf("rscale=%lf\n", thisparams->rscale);
+	printf("gscale=%lf\n", thisparams->gscale);
+	printf("bscale=%lf\n", thisparams->bscale);
+	printf("rshift=%lf\n", thisparams->rshift);
+	printf("gshift=%lf\n", thisparams->gshift);
+	printf("bshift=%lf \n\n", thisparams->bshift); 
 }
 
 void fprint_params(char *filename, plot_params *thisparams) {}

@@ -72,13 +72,13 @@ void write_data(plot_params *the_params, pix *returnarray) {
    char tmp[64] = "";
 
    strcpy(outfile, the_params->plotdir);
-   sprintf(tmp, "%d.dat", the_params->outname);
+   sprintf(tmp, "/%s.dat", the_params->outname);
    strcat(outfile, tmp);
    printf("the filepath is %s\n", outfile);
 
    char logvoutfile[128] = "";
    strcpy(logvoutfile, the_params->plotdir);
-   sprintf(tmp, "%d.logv", the_params->outname);
+   sprintf(tmp, "/%s.logv", the_params->outname);
    strcat(logvoutfile, tmp);
    FILE *logvfp = fopen(logvoutfile, "w");
    double thislogv = 0.0;
@@ -110,4 +110,5 @@ void write_data(plot_params *the_params, pix *returnarray) {
       fprintf(logvfp, "\n");
    }
    fclose(fp);
+   fclose(logvfp);
 }

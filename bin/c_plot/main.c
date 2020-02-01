@@ -43,7 +43,8 @@ int main(int argc, char *argv[]) {
    } else if(!strcmp(argv[1], "m")) {
 
 
-      int linelist[256] = {0};
+      int *linelist = malloc(sizeof(int)*256);
+ 
       make_line_list(linelist, argc, argv);
       plot_params **plotparams_arr;
       plot_params *tmp = malloc(sizeof(plot_params)*(linelist[0]-1));
@@ -55,10 +56,20 @@ int main(int argc, char *argv[]) {
 
       printf("about to enter fread\n");
       fread_params(linelist, plotparams_arr);
-      for(int i=0; i<linelist[0]; i++) {
+      pix *pixarray = {0};
+      int ph = 0;
+      int pw = 0;
+      for(int i=0; i<linelist[0]-1; i++) {
          print_params(plotparams_arr[i]);
-      return 1;
-   
+         ph = plotparams_arr[i]->ph;
+         pw = plotparams_arr[i]->pw;
+
+         pixarray = malloc(sizeof(pix)*ph*pw);
+         get_escapes(pixarray, plotparams_arr[i]);
+         write_data(plotparams_arr[i], pixarray);
+         
+         free(pixarray);	
       }
+	return 1;
    }
 }
