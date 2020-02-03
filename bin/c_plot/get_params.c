@@ -125,7 +125,7 @@ void fread_params(int *lines, plot_params **paramsout) {
       }
 
       //now we want this line, scanf and set params
-      fscanf(paramsfile, "%[^,], %lf, %lf, %lf, %lf, %d, %lf, %d, %d, %[^,], %d, %d, %d, %lf, %lf, %lf, %lf, %lf, %lf\n",
+      fscanf(paramsfile, "%[^,], %lf, %lf, %lf, %lf, %d, %lf, %d, %d, %[^,], %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf\n",
             aoutname, &allx, &ally, &aurx, &aury, &amaxiter, &adereps, &apw, &aph,
             acolormode, &armag, &agmag, &abmag, &arscale, &agscale, &abscale,
             &arshift, &agshift, &abshift);        
@@ -166,4 +166,18 @@ void print_params(plot_params *thisparams) {
 	printf("bshift=%lf \n\n", thisparams->bshift); 
 }
 
-void fprint_params(char *filename, plot_params *thisparams) {}
+void fprint_params(char *filename, plot_params *thisparams) {
+   FILE* paramsfile = fopen(filename, "a");
+   printf("filename: %s\n", filename); 
+   fprintf(paramsfile, "%s, %lf, %lf, %lf, %lf, %d, %lf, %d, %d, %s, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf\n",
+      thisparams->outname,
+      thisparams->llx, thisparams->lly, thisparams->urx, thisparams->ury,
+      thisparams->maxiter, thisparams->dereps,
+      thisparams->pw, thisparams->ph, thisparams->colormode,
+      thisparams->rmag, thisparams->gmag, thisparams->bmag,
+      thisparams->rscale, thisparams->gscale, thisparams->bscale,
+      thisparams->rshift, thisparams->gshift, thisparams->bshift);
+   printf("printed bitches\n"); 
+   fclose(paramsfile);
+   printf("closed bitches\n");
+} 

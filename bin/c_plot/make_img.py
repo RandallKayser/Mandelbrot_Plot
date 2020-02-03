@@ -7,6 +7,9 @@ if(len(sys.argv)!=3):
    print("usage: python make_img.py, plotfolder, runnum\n")
 
 filestring = "../../dat/" + sys.argv[1] + "/" + sys.argv[2] + ".dat"
+def makelinelist(instr):
+   low, high = [int(i) for i in instr.split("-")]
+   re
 def strtotriple(s):
    return [int(i) for i in s[1:-1].split(" ")]
 

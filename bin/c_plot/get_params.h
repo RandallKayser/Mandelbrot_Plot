@@ -10,4 +10,4 @@ plot_params* init_plot_params(char *plotdir, char *outname, int linenum, double 
       double rshift, double gshift, double bshift);
 void fread_params(int *lines, plot_params **paramsout);
 void print_params(plot_params *paramsout);
-
+void fprint_params(char *filepath, plot_params *thisparams);
