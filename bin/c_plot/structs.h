@@ -6,7 +6,7 @@ struct run_struct {
 };
 
 struct plot_struct {
-   // NOTE: params required for singular plot
+   // all the params required for a singular plot
    char plotdir[256];
    char outname[256];
    int linenum;
@@ -30,6 +30,20 @@ struct plot_struct {
    double bshift;
 };
 
+struct pix_data {
+   //pixel coords
+   int i;
+   int j;
+   // z coords
+   double cx;
+   double cy;
+   // escape iteration and modulus
+   int n_esc;
+   double escmod;
+   double logv;
+};
+
+typedef struct pix_data pix;
 typedef struct plot_struct plot_params;
 typedef struct run_struct run_params;
 

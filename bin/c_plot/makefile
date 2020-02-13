@@ -2,11 +2,11 @@
 CC = gcc
 CFLAGS = -I. -O3
 
-DEPS = get_escapes.h get_params.h structs.h write_data.h
+DEPS = get_escapes.h get_params.h structs.h write_data.h esc_to_data.h
 ODIR = obj
 LIBS = -lm
 
-_OBJ = main.o get_escapes.o get_params.o write_data.o
+_OBJ = main.o get_escapes.o get_params.o write_data.o esc_to_data.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 $(ODIR)/%.o: %.c $(DEPS)

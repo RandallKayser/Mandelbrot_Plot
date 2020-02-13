@@ -52,7 +52,7 @@ void make_line_list(int *linelist, int argctot, char *args[]) {
    int offset = 1;
    int low = 0;
    int high = 0;
-   for(int i=3; i<argctot; i++) {
+   for(int i=2; i<argctot; i++) {
       strcpy(scratch, args[i]);
       scratchptr[0] = strtok(scratch, "-");
       scratchptr[1] = strtok(NULL, "-");

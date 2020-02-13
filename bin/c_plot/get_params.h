@@ -1,4 +1,5 @@
 #define GET_PARAMS_HEADER 1
+
 #ifndef GET_STRUCTS
 #include "structs.h"
 #endif

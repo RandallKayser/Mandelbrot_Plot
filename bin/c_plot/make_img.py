@@ -6,10 +6,19 @@ import sys
 if(len(sys.argv)!=3):
    print("usage: python make_img.py, plotfolder, runnum\n")
 
-filestring = "../../dat/" + sys.argv[1] + "/" + sys.argv[2] + ".dat"
 def makelinelist(instr):
-   low, high = [int(i) for i in instr.split("-")]
-   re
+   result = []
+   for j in instr:
+      if( j.find("-") != -1 ):
+         low, high = [int(i) for i in j.split("-")]
+         result.extend([str(i) for i in range(low, high+1)])
+      else:
+         result.append(j)
+   return result
+print(sys.argv[2:])
+paramlist = makelinelist(sys.argv[2:])
+print(paramlist)
+
 def strtotriple(s):
    return [int(i) for i in s[1:-1].split(" ")]
 
@@ -29,5 +38,10 @@ def makeimg(filestring, output):
    pic = im.fromarray((dataarray).astype('uint8'), mode = "RGB")
    pic.save(output)
    datafile.close()
-output = "../../dat/" + sys.argv[1] + "/" + sys.argv[2] + ".png"
-makeimg(filestring, output)
+
+linelist = makelinelist(sys.argv[2:])
+filelist = ["../../dat/" + sys.argv[1] + "/" + i + ".dat" for i in linelist]
+outputlist = ["../../dat/" + sys.argv[1] + "/" + i  + ".png" for i in linelist]
+
+for i in range(len(filelist)):
+   makeimg(filelist[i], outputlist[i])

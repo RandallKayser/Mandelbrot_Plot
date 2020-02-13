@@ -9,4 +9,4 @@
 #endif
 
 void write_data(plot_params *the_params, pix *returnarray);
-
+void write_logv(plot_params *the_params, pix *returnarray);
