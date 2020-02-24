@@ -70,13 +70,14 @@ void get_color(int *out, pix *p, pix *pixarray, plot_params *the_params) {
 void make_logv_array(double *logvarr, pix *pixarray, plot_params *the_params) {
    int pixh = the_params->ph;
    int pixw = the_params->pw;
-   pix *thispix = NULL;
-
+   double thislogv = 0.0;
+   
    for(int j=0; j<pixh; j++) {
       for(int i=0; i<pixw; i++) {
-         thispix = &(pixarray[i+j*pixw]);
-         if(!isnan(thispix->logv)) {
-             logvarr[i+j*pixw] = thispix->logv;
+         thislogv = pixarray[i+j*pixw].logv;
+         if(!isnan(thislogv)) {
+            logvarr[i+j*pixw] = thislogv;
+            printf("logvarr[%i, %i] = %f, should be:%f\n", i, j, logvarr[i+j*pixw], thislogv);
          } else {
             logvarr[i+j*pixw] = 0.0;
          }      
@@ -85,11 +86,11 @@ void make_logv_array(double *logvarr, pix *pixarray, plot_params *the_params) {
 }
 
 double l2_of_lap(double *logvarr, plot_params *the_params, char* stencil) {
-   double sum = 0;
-   double temp = 0;
+   double sum = 0.0;
+   double temp = 0.0;
    int pixh = the_params->ph;
    int pixw = the_params->pw;
-   
+   double pixparam = (double) pixh*pixw;
    if(!strcmp(stencil, "3x3")) {
       for(int j=1; j<pixh-1; j++) {
          for(int i=1; i<pixw-1; i++) {
@@ -102,14 +103,14 @@ double l2_of_lap(double *logvarr, plot_params *the_params, char* stencil) {
             temp +=       logvarr[(i-1) + (j+1)*pixw];
             temp +=       logvarr[ i    + (j+1)*pixw];
             temp +=       logvarr[(i+1) + (j+1)*pixw];
-            sum += temp*temp;
-            temp = 0;
+            temp = temp*temp / pixparam;
+            sum += temp;
+            printf("sum=%f\n", sum);
+            temp = 0.0;
          }
       }
-      
-      sum /= (pixw*pixh);
+      printf("sum=%f\n", sum);
       return sum;
-   }
-   
+   } 
    return -1.0;
 }
