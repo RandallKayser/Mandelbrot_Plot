@@ -37,7 +37,7 @@ def makeimg(filestring, output):
    pic.save(output)
    datafile.close()
 
-if(sys.argv[2]=="num"):
+if(len(sys.argv)<3 or sys.argv[2]=="num"):
    linelist = makelinelist(sys.argv[3:])
    filelist = ["../../dat/" + sys.argv[1] + "/" + i + ".dat" for i in linelist]
    outputlist = ["../../dat/" + sys.argv[1] + "/" + i  + ".png" for i in linelist]

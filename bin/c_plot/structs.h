@@ -9,7 +9,6 @@ struct plot_struct {
    // all the params required for a singular plot
    char plotdir[256];
    char outname[256];
-   int linenum;
    double llx;
    double lly;
    double urx;

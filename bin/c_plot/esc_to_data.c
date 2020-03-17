@@ -77,7 +77,6 @@ void make_logv_array(double *logvarr, pix *pixarray, plot_params *the_params) {
          thislogv = pixarray[i+j*pixw].logv;
          if(!isnan(thislogv)) {
             logvarr[i+j*pixw] = thislogv;
-            printf("logvarr[%i, %i] = %f, should be:%f\n", i, j, logvarr[i+j*pixw], thislogv);
          } else {
             logvarr[i+j*pixw] = 0.0;
          }      
@@ -105,11 +104,9 @@ double l2_of_lap(double *logvarr, plot_params *the_params, char* stencil) {
             temp +=       logvarr[(i+1) + (j+1)*pixw];
             temp = temp*temp / pixparam;
             sum += temp;
-            printf("sum=%f\n", sum);
             temp = 0.0;
          }
       }
-      printf("sum=%f\n", sum);
       return sum;
    } 
    return -1.0;

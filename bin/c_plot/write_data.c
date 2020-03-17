@@ -20,7 +20,7 @@ void write_data(plot_params *the_params, pix *returnarray) {
    char tmp[64] = "";
 
    strcpy(outfile, the_params->plotdir);
-   sprintf(tmp, "/%s.dat", the_params->outname);
+   sprintf(tmp, "%s.dat", the_params->outname);
    strcat(outfile, tmp);
    FILE *fp = fopen(outfile, "w");
    int pixw = the_params->pw;
