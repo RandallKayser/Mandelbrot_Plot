@@ -9,14 +9,15 @@
 #include "get_params.h"
 #endif
 
-plot_params *init_plot_params(char *plotdir, char *outname,
+void init_plot_params(plot_params *ret_ptr, char *plotdir, char *outname,
       double llx, double lly, double urx, double ury,
       int maxiter, double dereps, int pw, int ph, char *colormode,
       double rmag, double gmag, double bmag,
       double rscale, double gscale, double bscale,
       double rshift, double gshift, double bshift) {
-   
-   plot_params *ret_ptr = malloc(sizeof(plot_params));
+   if(ret_ptr==NULL) {
+      printf("FUCK!\n");
+   }
    strcpy(ret_ptr->plotdir, plotdir);
    strcpy(ret_ptr->outname, outname);
    ret_ptr->llx = llx;
@@ -37,15 +38,12 @@ plot_params *init_plot_params(char *plotdir, char *outname,
    ret_ptr->rshift = rshift;
    ret_ptr->gshift = gshift;
    ret_ptr->bshift = bshift;
-
-   return ret_ptr;
 }
 
 void make_line_list(int *linelist, int argctot, char *args[]) {
    // return linelist populated with values:
    //       linelist[0] = sum of true entries
    //       linelist[maxlineval] = PARAMS_BREAK
-   
    char scratch[64] = "";
    char *scratchptr[2] = {""}; 
    char **ptr;
@@ -83,7 +81,7 @@ int fread_params(int *lines, char* plotlist_fname, plot_params **paramsout) {
    strcat(filepath, plotlist_fname);
    printf("fread filepath is: %s\n", filepath);
    FILE* paramsfile = fopen(filepath, "r");
-   char aoutname[64] = {"\0"};
+   char aoutname[64] = "\0";
    //bounds
    double allx = 0.0;
    double ally = 0.0;
@@ -94,7 +92,7 @@ int fread_params(int *lines, char* plotlist_fname, plot_params **paramsout) {
    double adereps = 0.0;
    int apw = 0;
    int aph = 0;
-   char acolormode[8]= {"\0"};
+   char acolormode[8]= "\0";
 
    //overal channel strength
    double armag = 255.0;
@@ -131,19 +129,18 @@ int fread_params(int *lines, char* plotlist_fname, plot_params **paramsout) {
       retval = fscanf(paramsfile, "%[^,], %lf, %lf, %lf, %lf, %d, %lf, %d, %d, %[^,], %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf\n",
             aoutname, &allx, &ally, &aurx, &aury, &amaxiter, &adereps, &apw, &aph,
             acolormode, &armag, &agmag, &abmag, &arscale, &agscale, &abscale,
-            &arshift, &agshift, &abshift);        
-      (*paramsout)[offset] = *init_plot_params(paramsout[0]->plotdir, aoutname, 
+            &arshift, &agshift, &abshift);
+            if(retval != 19) {
+               printf("retval = %i\n", retval);
+               lines[0] = offset+1;
+               return offset;
+            }
+      init_plot_params(paramsout[offset], paramsout[0]->plotdir, aoutname, 
             allx, ally,  aurx, aury,
             amaxiter, adereps, apw, aph, acolormode,
             armag, agmag, abmag,
             arscale, agscale, abscale, 
             arshift, agshift, abshift);
-      print_params(paramsout[offset]);
-      if(retval != 19) {
-         printf("retval = %i\n", retval);
-         lines[0] = offset+1;
-         return offset;
-      }
       offset++;
       fline++;
    }
@@ -198,9 +195,10 @@ void print_params(plot_params *thisparams) {
 }
 
 void fprint_params(char *filename, plot_params *thisparams) {
-   FILE* paramsfile = NULL;
-
-   if((paramsfile = fopen(filename, "a")) != NULL) {
+   printf("declare fp\n");
+   FILE* paramsfile;
+   printf("inside fprint now\n");
+   if((paramsfile = fopen(filename, "a"))!=NULL) {
       printf("fprint filename: %s\n", filename); 
       fprintf(paramsfile, "%s, %lf, %lf, %lf, %lf, %d, %lf, %d, %d, %s, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf, %lf\n",
          thisparams->outname,
@@ -220,27 +218,30 @@ void bisect_params(plot_params *the_params, char *outfilename, char *plotdir) {
    char plotlistfp[256] = "";
    strcpy(plotlistfp, plotdir);
    strcat(plotlistfp, outfilename);
-   plot_params *spp1 = NULL; 
-   plot_params *spp2 = NULL; 
-   plot_params *spp3 = NULL; 
-   plot_params *spp4 = NULL; 
+   printf("bisect_params say plotlistfp = %s\n", plotlistfp);
+   plot_params *spp1 = {0}; 
+   plot_params *spp2 = {0}; 
+   plot_params *spp3 = {0}; 
+   plot_params *spp4 = {0}; 
    double mpx = (the_params->urx + the_params->llx) / 2.0;
    double mpy = (the_params->ury + the_params->lly) / 2.0;
    char temp[256] = "";
-
+   
    strcpy(temp, the_params->outname);
    strcat(temp, "0");
-   spp1 = init_plot_params(plotdir, temp,
+   printf("init_plot about to happen\n");
+   init_plot_params(spp1, plotdir, temp,
       mpx, mpy, the_params->urx, the_params->ury,
       the_params->maxiter, the_params->dereps, the_params->pw, the_params->ph, the_params->colormode,
       the_params->rmag, the_params->gmag, the_params->bmag,
       the_params->rscale, the_params->gscale, the_params->bscale,
       the_params->rshift, the_params->gshift, the_params->bshift);
+   printf("fprint about to happen\n");
    fprint_params(plotlistfp, spp1);
 
    strcpy(temp, the_params->outname);
    strcat(temp, "1");
-   spp2 = init_plot_params(plotdir, temp,
+   init_plot_params(spp2, plotdir, temp,
       the_params->llx, mpy, mpx, the_params->ury,
       the_params->maxiter, the_params->dereps, the_params->pw, the_params->ph, the_params->colormode,
       the_params->rmag, the_params->gmag, the_params->bmag,
@@ -250,7 +251,7 @@ void bisect_params(plot_params *the_params, char *outfilename, char *plotdir) {
 
    strcpy(temp, the_params->outname);
    strcat(temp, "2");
-   spp3 = init_plot_params(plotdir, temp,
+   init_plot_params(spp3, plotdir, temp,
       the_params->llx, the_params->lly, mpx, mpy,
       the_params->maxiter, the_params->dereps, the_params->pw, the_params->ph, the_params->colormode,
       the_params->rmag, the_params->gmag, the_params->bmag,
@@ -260,7 +261,7 @@ void bisect_params(plot_params *the_params, char *outfilename, char *plotdir) {
 
    strcpy(temp, the_params->outname);
    strcat(temp, "3");
-   spp4 = init_plot_params(plotdir, temp,
+   init_plot_params(spp4, plotdir, temp,
       mpx, the_params->lly, the_params->urx, mpy,
       the_params->maxiter, the_params->dereps, the_params->pw, the_params->ph, the_params->colormode,
       the_params->rmag, the_params->gmag, the_params->bmag,

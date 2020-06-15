@@ -1,6 +1,6 @@
 /// param guide ///
 
-llx, lly, urx, ury, maxiter, dereps, pw, ph, colormode, lpcw 
+llx, lly, urx, ury, maxiter, dereps, pw, ph, colormode, rgbparams
 
 ///
 
@@ -8,10 +8,18 @@ llx, lly, urx, ury = (double) coords of bounding box on lower left, upper right
 
 maxiter = (int) precision of Mset
 
+dereps = derivative epsilon - parameter controls tolerance in interior detection method
+
 pw, ph = (int pixel dimensions)
 
 colormode = (string) color mode
 
-lpcw = (double) log potential color width tunes width of colorbands
+rgbparams:
 
-dereps = derivative epsilon - parameter controls tolerance in interior detection method
+(rgb)mag: maximum value for color band
+
+(rgb)scale: controls sharpness of tanh transition
+
+(rgb)shift: controls position of tanh transition
+
+
