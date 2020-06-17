@@ -91,9 +91,9 @@ int bisectionplot(int level, char *plotdirfp, char *plotinname) {
       return 1;
    }
    printf("plotdirfp = %s  plotinname = %s\n\n", plotdirfp, plotinname);
-   plot_params *the_params[4] = malloc(sizeof(plot_params*)*4);
+   plot_params **the_params = malloc(sizeof(plot_params*)*4);
    for(int i=0; i<4; i++) {
-      the_params[i] = malloc(sizeof(plot_params));
+       the_params[i] = malloc(sizeof(plot_params));
    }
    strcpy(the_params[0]->plotdir, plotdirfp);
 
@@ -133,17 +133,19 @@ int bisectionplot(int level, char *plotdirfp, char *plotinname) {
       free(logvarray);
    }
 
-   char temp[128] = ""; 
+   char *temp;
+   temp = malloc(sizeof(char)*128); 
 
    for(int i=0; i<linelist[0]-1; i++) {
-      if(lapl2[i] >= thresh) {
+//      if(lapl2[i] >= thresh) {
          sprintf(temp, "%s%i", plotinname, i);
          printf("plotdirfp/plotinname = %s %s\n", plotdirfp, temp);
          bisect_params(the_params[i], temp, plotdirfp);
          bisectionplot(level-1, plotdirfp, temp);
          strcpy(temp, "");
-      }
+//      }
    }
    free(linelist);
+   free(temp);
    return 1;
 }

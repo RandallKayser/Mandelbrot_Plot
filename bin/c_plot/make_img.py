@@ -36,6 +36,7 @@ def makeimg(filestring, output):
    pic = im.fromarray((dataarray).astype('uint8'), mode = "RGB")
    pic.save(output)
    datafile.close()
+   print("making filestring:"+filestring)
 
 if(len(sys.argv)<3 or sys.argv[2]=="num"):
    linelist = makelinelist(sys.argv[3:])

@@ -118,7 +118,6 @@ int fread_params(int *lines, char* plotlist_fname, plot_params **paramsout) {
    int retval = 0;
    for(int i=1; i<lines[0]; i++) {
       
-      printf("params_ptr[%d] = %i\n", offset, paramsout[offset]);
       while(fline<lines[i]) {
          //we dont want this line; give to placeholder
          fgets(p, 2048, paramsfile);
@@ -135,6 +134,9 @@ int fread_params(int *lines, char* plotlist_fname, plot_params **paramsout) {
                lines[0] = offset+1;
                return offset;
             }
+      if(paramsout[offset] == NULL) {
+         printf("wtf\n\n\n");
+      }
       init_plot_params(paramsout[offset], paramsout[0]->plotdir, aoutname, 
             allx, ally,  aurx, aury,
             amaxiter, adereps, apw, aph, acolormode,
@@ -219,10 +221,11 @@ void bisect_params(plot_params *the_params, char *outfilename, char *plotdir) {
    strcpy(plotlistfp, plotdir);
    strcat(plotlistfp, outfilename);
    printf("bisect_params say plotlistfp = %s\n", plotlistfp);
-   plot_params *spp1 = {0}; 
-   plot_params *spp2 = {0}; 
-   plot_params *spp3 = {0}; 
-   plot_params *spp4 = {0}; 
+   plot_params *spp1 = malloc(sizeof(plot_params)); 
+   plot_params *spp2 = malloc(sizeof(plot_params)); 
+   plot_params *spp3 = malloc(sizeof(plot_params)); 
+   plot_params *spp4 = malloc(sizeof(plot_params)); 
+
    double mpx = (the_params->urx + the_params->llx) / 2.0;
    double mpy = (the_params->ury + the_params->lly) / 2.0;
    char temp[256] = "";
@@ -268,5 +271,8 @@ void bisect_params(plot_params *the_params, char *outfilename, char *plotdir) {
       the_params->rscale, the_params->gscale, the_params->bscale,
       the_params->rshift, the_params->gshift, the_params->bshift);
    fprint_params(plotlistfp, spp4);
-
+   free(spp1);
+   free(spp2);
+   free(spp3);
+   free(spp4);
 }
